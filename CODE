@@ -1,0 +1,170 @@
+from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
+import numpy as np
+import scipy as sp
+from numpy import inf
+from astropy.io import fits
+from astropy.table import Table, Column
+from matplotlib import pyplot as plt
+import glob
+import matplotlib.patches as mpatches
+import matplotlib.lines as mlines
+import matplotlib
+import math
+from statsmodels.api import OLS
+import statsmodels.formula.api as smf
+from pandas import DataFrame
+from matplotlib import cm
+from matplotlib.ticker import LinearLocator, FormatStrFormatter
+from scipy import interpolate
+from mpl_toolkits.mplot3d import axes3d
+from scipy.interpolate import griddata
+
+import matplotlib as mpl
+
+
+def sort(Teff, J_K):
+	x = zip(Teff, J_K)
+	xs = sorted(x, key = lambda tup: tup[0])
+	Teff = [x[0] for x in xs]
+	J_K = [x[1] for x in xs]
+	return Teff, J_K
+
+a = fits.open('Kurucz.fits')
+
+Teff = a[1].data.field(0)
+lam = a[1].data.field(1)
+log_z = a[1].data.field(2)
+J_K = a[1].data.field(3)
+J_H = a[1].data.field(4)
+H_K = a[1].data.field(5)
+J_KS = a[1].data.field(6)
+B_V = a[1].data.field(7)
+V_J = a[1].data.field(8)
+V_H = a[1].data.field(9)
+V_K = a[1].data.field(10)
+V_KS = a[1].data.field(11)
+
+
+
+
+
+for i in range(0,11):
+    J_K_pr = J_K[:,i][(J_K[:,i]<50)]
+    Teff_fin = Teff[(J_K[:,i]<50)]
+    Log_z_fin = log_z[(J_K[:,i]<50)]
+    
+    
+    J_K_fin = J_K_pr[(J_K_pr>-0.4)]
+    Teff_fin = Teff_fin[(J_K_pr>-0.4)]
+    Log_z_fin = Log_z_fin[(J_K_pr>-0.4)]
+    
+    if (i==1):
+        Teff_del = 1*((Teff_fin == 3750)*(Log_z_fin == -4))
+
+        J_K_fin = J_K_fin[(Teff_del == 0)]
+        Teff_fin = Teff_fin[(Teff_del == 0)]
+        Log_z_fin = Log_z_fin[(Teff_del == 0)]
+        
+        
+    elif (i==2):
+        Teff_del = 1*((Teff_fin == 3750)*(Log_z_fin == -3))
+        Teff_del_2 = 1*((Teff_fin == 3500)*(Log_z_fin == -5))
+        
+        J_K_fin = J_K_fin[(Teff_del == 0)*(Teff_del_2==0)]
+        Teff_fin = Teff_fin[(Teff_del == 0)*(Teff_del_2==0)]
+        Log_z_fin = Log_z_fin[(Teff_del == 0)*(Teff_del_2==0)]
+        
+    elif (i==3):
+        Teff_del = 1*((Teff_fin == 3500)*(Log_z_fin == -4.5))
+        Teff_del_2 = 1*((Teff_fin == 3500)*(Log_z_fin == -5))
+        
+        J_K_fin = J_K_fin[(Teff_del == 0)*(Teff_del_2==0)]
+        Teff_fin = Teff_fin[(Teff_del == 0)*(Teff_del_2==0)]
+        Log_z_fin = Log_z_fin[(Teff_del == 0)*(Teff_del_2==0)]
+        
+    elif (i==4):
+        Teff_del = 1*((Teff_fin == 3500)*(Log_z_fin == -3))
+        Teff_del_2 = 1*((Teff_fin == 3500)*(Log_z_fin == -4.5))
+        Teff_del_3 = 1*((Teff_fin == 3500)*(Log_z_fin == -4))
+        
+        J_K_fin = J_K_fin[(Teff_del == 0)*(Teff_del_2==0)*(Teff_del_3==0)]
+        Teff_fin = Teff_fin[(Teff_del == 0)*(Teff_del_2==0)*(Teff_del_3==0)]
+        Log_z_fin = Log_z_fin[(Teff_del == 0)*(Teff_del_2==0)*(Teff_del_3==0)]
+        
+    elif (i==6):
+        Teff_del = 1*((Teff_fin == 3500)*(Log_z_fin == -3))
+        Teff_del_2 = 1*((Teff_fin == 3500)*(Log_z_fin == -2.5))
+        Teff_del_3 = 1*((Teff_fin == 3500)*(Log_z_fin == -3.5))
+        Teff_del_4 = 1*((Teff_fin == 3500)*(Log_z_fin == -4))
+        
+        J_K_fin = J_K_fin[(Teff_del == 0)*(Teff_del_2==0)*(Teff_del_3==0)*(Teff_del_4==0)]
+        Teff_fin = Teff_fin[(Teff_del == 0)*(Teff_del_2==0)*(Teff_del_3==0)*(Teff_del_4==0)]
+        Log_z_fin = Log_z_fin[(Teff_del == 0)*(Teff_del_2==0)*(Teff_del_3==0)*(Teff_del_4==0)]
+      
+        
+    elif (i==5):
+        Teff_del = 1*((Teff_fin == 3500)*(Log_z_fin == -2.5))
+        Teff_del_2 = 1*((Teff_fin == 3500)*(Log_z_fin == -3))
+        Teff_del_3 = 1*((Teff_fin == 3500)*(Log_z_fin == -3.5))
+        Teff_del_4 = 1*((Teff_fin == 3500)*(Log_z_fin == -4))
+        Teff_del_5 = 1*((Teff_fin == 3500)*(Log_z_fin == -4.5))
+        
+        J_K_fin = J_K_fin[(Teff_del == 0)*(Teff_del_2==0)*(Teff_del_3==0)*(Teff_del_4==0)*(Teff_del_5==0)]
+        Teff_fin = Teff_fin[(Teff_del == 0)*(Teff_del_2==0)*(Teff_del_3==0)*(Teff_del_4==0)*(Teff_del_5==0)]
+        Log_z_fin = Log_z_fin[(Teff_del == 0)*(Teff_del_2==0)*(Teff_del_3==0)*(Teff_del_4==0)*(Teff_del_5==0)]
+       
+    elif (i==7):
+        Teff_del = 1*((Teff_fin == 3500)*(Log_z_fin == -3))
+        Teff_del_2 = 1*((Teff_fin == 3500)*(Log_z_fin == -3.5))
+        
+        J_K_fin = J_K_fin[(Teff_del == 0)*(Teff_del_2==0)]
+        Teff_fin = Teff_fin[(Teff_del == 0)*(Teff_del_2==0)]
+        Log_z_fin = Log_z_fin[(Teff_del == 0)*(Teff_del_2==0)]       
+        
+    elif (i==8):
+        Teff_del = 1*((Teff_fin == 3500)*(Log_z_fin == -2))
+
+        J_K_fin = J_K_fin[(Teff_del == 0)]
+        Teff_fin = Teff_fin[(Teff_del == 0)]
+        Log_z_fin = Log_z_fin[(Teff_del == 0)]    
+        
+    elif (i==10):
+        Teff_del = 1*((Teff_fin == 3500)*(Log_z_fin == -2))
+
+        J_K_fin = J_K_fin[(Teff_del == 0)]
+        Teff_fin = Teff_fin[(Teff_del == 0)]
+        Log_z_fin = Log_z_fin[(Teff_del == 0)] 
+        
+        
+    x = J_K_fin
+    y = Log_z_fin
+    z = Teff_fin
+    
+    x_grid = np.linspace(np.min(x), np.max(x), 10000)
+    y_grid = np.linspace(np.min(y), np.max(y), 193)
+    X, Y = np.meshgrid(x_grid, y_grid, indexing='xy')
+    Z = griddata((x,y),z, (X, Y), method='linear')
+    
+    
+    
+#     #############  DRAWING #################
+
+
+    fig = plt.figure(i+1, figsize = (16,10))
+    ax = fig.add_subplot(111, projection='3d')
+    
+
+    norm = mpl.colors.Normalize(vmin=1000.,vmax=14000.)
+    #ax.plot_wireframe(X, Y, Z)
+    
+    ax.plot_surface(X, Y, Z, norm=norm, cmap='inferno', alpha=0.6, linewidth=0, antialiased=False)
+
+    ax.set_xlabel('J-K')
+    ax.set_ylabel('[Fe/H]')
+    ax.set_zlabel('Teff')
+
+
+    ax.scatter(J_K_fin,Log_z_fin,Teff_fin,c=Teff_fin, cmap='hsv')
+    plt.show()
+    
+#     ############  DRAWING #################
