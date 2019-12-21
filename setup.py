@@ -10,6 +10,6 @@ setup(
     include_package_data=True,
     packages=find_packages(),
     test_suite='test',
-    install_requires=['numpy>=1.13', 'scipy>=1.0', 'astropy>=3.2.1'],
+    install_requires=['numpy>=1.13', 'scipy>=1.0', 'astropy>=3.0.1'],
     long_description=long_description,
 ) 
