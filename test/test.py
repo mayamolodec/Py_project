@@ -5,7 +5,8 @@ from numpy.testing import assert_array_equal
 import doctest
 import unittest
 
-import phoenixiter
+from Phoenix_interpol import sort
+
 
 
 class SortTest(unittest.TestCase):
