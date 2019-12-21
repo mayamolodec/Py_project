@@ -1,0 +1,4 @@
+include runner README.md
+recursive-include persist/Phoenix.fits *
+
+ 
