@@ -4,7 +4,6 @@ from os.path import join, dirname
 setup(
     name='Phoenix_interpol',
     version='1.0',
-    packages=find_packages(),
     include_package_data=True,
     packages=find_packages(),
     test_suite='test',
