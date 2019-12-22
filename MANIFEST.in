@@ -1,3 +1,5 @@
+include runner README.md
+include Phoenix.fits
 
 
  

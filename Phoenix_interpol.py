@@ -196,16 +196,16 @@ def interp_2D(x, y, z, Col_i, z_val):
 		float: Temperature in K
 		"""
 
-		x_grid = np.around(np.arange(round(np.min(x), 3), round(np.max(x), 3)+0.001, 0.001), 3)
-		y_grid = np.around(np.arange(np.min(y), np.max(y)+0.01, 0.01), 2)
+	x_grid = np.around(np.arange(round(np.min(x), 3), round(np.max(x), 3)+0.001, 0.001), 3)
+	y_grid = np.around(np.arange(np.min(y), np.max(y)+0.01, 0.01), 2)
 
-		X, Y = np.meshgrid(x_grid, y_grid, indexing='xy')
-		Z = griddata((x, y), z, (X, Y), method='linear')
+	X, Y = np.meshgrid(x_grid, y_grid, indexing='xy')
+	Z = griddata((x, y), z, (X, Y), method='linear')
 
-		mas_x = np.argmin(np.abs(x_grid - Col_i))
-		mas_y = np.argmin(np.abs(y_grid - z_val))
+	mas_x = np.argmin(np.abs(x_grid - Col_i))
+	mas_y = np.argmin(np.abs(y_grid - z_val))
 
-		return np.round(np.float(Z[mas_x, mas_y]), 3)
+	return np.round(np.float(Z[mas_x, mas_y]), 3)
 
 
 def main(Col_ind_val, Col_i, log_z_val, log_g_val):
@@ -275,19 +275,23 @@ def main(Col_ind_val, Col_i, log_z_val, log_g_val):
 	return  Teff_hot, Teff_cold
 
 
-if __name__=='__main__':
+def with_args():
 	parser = argparse.ArgumentParser(prog='Phoenix_interpol.py')
 
 	parser.add_argument("-I", "--color_name", type=str,
-	                    help=r"Выбор показателя цвета: J-K, J-H, H-K, J-KS, B-V")
+	                    help="Выбор показателя цвета: J-K, J-H, H-K, J-KS, B-V")
 	parser.add_argument("-C", "--color_value", type=float,
-	                    help=r"Показатель цвета, возможные значения лежат в следущих диапазонах J-K: -0.975 -- 1.381, J-H: -0.255 -- 1.033, H-K: -0.804 -- 0.542, J-KS: -0.997 -- 1.350, B-V: 0.0382 -- 3.001")
+	                    help="Показатель цвета, возможные значения лежат в следущих диапазонах J-K: -0.975 -- 1.381, J-H: -0.255 -- 1.033, H-K: -0.804 -- 0.542, J-KS: -0.997 -- 1.350, B-V: 0.0382 -- 3.001")
 	parser.add_argument("-Z", "--metall", type=float,
-	                    help=r"Металличность звезды, изменяется в диапазоне от -4 до 1")
+	                    help="Металличность звезды, изменяется в диапазоне от -4 до 1")
 	parser.add_argument("-G", "--log_g", type=float,
-	                    help=r"Log(g) звезды, изменяется в диапазоне от 0 до 6")
+	                    help="Log(g) звезды, изменяется в диапазоне от 0 до 6")
 
 	args = parser.parse_args()
 
 	teff1, teff2 = main(Col_ind_val=args.color_name, Col_i=args.color_value, log_z_val=args.metall, log_g_val=args.log_g)
-	print(r'Температура звезды, высокая:', teff1, 'K', r'\nТемпература звезды, низкая', teff2, 'K')
+	print('Температура звезды, высокая:', teff1, 'K', '\nТемпература звезды, низкая', teff2, 'K')
+
+
+if __name__=='__main__':
+	with_args()
