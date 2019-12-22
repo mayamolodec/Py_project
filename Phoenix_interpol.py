@@ -202,12 +202,9 @@ def interp_2D(x, y, z, Col_i, z_val):
 	X, Y = np.meshgrid(x_grid, y_grid, indexing='xy')
 	Z = griddata((x, y), z, (X, Y), method='linear')
 
-	print(np.shape(Z), len(y_grid), len(x_grid))
-
 	mas_x = np.argmin(np.abs(y_grid - z_val))
 	mas_y = np.argmin(np.abs(x_grid - Col_i))
 	
-	print(mas_x, mas_y)
 	return np.round(np.float(Z[mas_x, mas_y]), 3)
 
 
@@ -242,13 +239,6 @@ def main(Col_ind_val, Col_i, log_z_val, log_g_val):
 	H_K = a[1].data.field(5)
 	J_KS = a[1].data.field(6)
 	B_V = a[1].data.field(7)
-
-	print(type(Teff))
-	print(np.min(J_K), np.max(J_K))
-	print(np.min(J_H), np.max(J_H))
-	print(np.min(H_K), np.max(H_K))
-	print(np.min(J_KS), np.max(J_KS))
-	print(np.min(B_V), np.max(B_V))
 
 	logg = np.arange(0, 6.5, 0.5)
 	g_grid = np.arange(0, 6.5, 0.01)
