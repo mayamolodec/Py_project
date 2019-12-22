@@ -10,7 +10,26 @@ import argparse
 
 def sort(Col_ind, log_z, Teff, log_g):
 	""" Функция сортирует массивы содержащие значения 
-		Teff, Log(g), [Fe/H], показателя цвета по массиву Teff """
+		показателя цвета, [Fe/H], Teff, Log(g) по массиву Teff
+
+		Parametrs:
+		---------
+		Col_ind: array of floats		
+		log_z:   array of floats
+		Teff:    array of ints
+		log_g:   array of floats
+		
+		Returns:
+		-------
+		array of floats:
+				First parametr		
+		array of floats:
+				Second parametr
+		array of ints:
+				Third parametr
+		array of floats:
+				Fourth parametr
+		"""
 
 	x = zip(Col_ind, log_z, Teff, log_g)
 	xs = sorted(x, key=lambda tup: tup[2])
@@ -23,9 +42,26 @@ def sort(Col_ind, log_z, Teff, log_g):
 
 
 def mask(Col_ind, log_z, Teff, log_g, i):
-	""" Функция выделяет из массивов содержащих значения 
-		Teff, [Fe/H], показателя цвета элементы соответствующие заданному Log(g) """
+	""" Функция выделяет из массивов содержащих значения показателя цвета, [Fe/H], Teff,
+		элементы соответствующие заданному Log(g)
 
+		Parametrs:
+		---------
+		Col_ind: array of floats		
+		log_z:   array of floats
+		Teff:    array of ints
+		log_g:   array of floats
+		i:       float
+
+		Returns:
+		-------
+		array of floats:
+				First parametr		
+		array of floats:
+				Second parametr
+		array of ints:
+				Third parametr
+		"""
 	mask = (log_g == i)
 	Col_ind_fin = Col_ind[(mask)]
 	log_z_fin = log_z[(mask)]
@@ -37,10 +73,26 @@ def mask(Col_ind, log_z, Teff, log_g, i):
 def cut_hot(Col_ind, log_z, Teff, Zi):
 	""" Из-за того, что зависимость Teff от показателя цвета неоднозначная 
 		(один и тот же показатель цвета может соответствовать разным температурам),
-		необходимо разделить массивы содержащие значения показателя цвета, Teff, [Fe/H] 
-		на область низких и высоких температур. Функция находит максимальное значение показателя цвета
-		и выделяет из массивов элементы соответствующие большим температурам """
+		необходимо разделить массивы, содержащие значения показателя цвета, Teff, [Fe/H] 
+		на область низких и высоких температур. Функция находит максимальное значение 
+		показателя цвета и выделяет из массивов элементы соответствующие большим температурам.
 
+		Parametrs:
+		---------
+		Col_ind: array of floats		
+		log_z:   array of floats
+		Teff:    array of ints
+		Zi:   array of floats
+		
+		Returns:
+		-------
+		array of floats:
+				First parametr		
+		array of floats:
+				Second parametr
+		array of ints:
+				Third parametr
+		"""
 	COLIND = []
 	ZVAL = []
 	TEFF = []
@@ -67,7 +119,24 @@ def cut_cold(Col_ind, log_z, Teff, Zi):
 		(один и тот же показатель цвета может соответствовать разным температурам),
 		необходимо разделить массивы содержащие значения показателя цвета, Teff, [Fe/H] 
 		на область низких и высоких температур. Функция находит максимальное значение показателя цвета
-		и выделяет из массивов элементы соответствующие низким температурам """
+		и выделяет из массивов элементы соответствующие низким температурам.
+
+		Parametrs:
+		---------
+		Col_ind: array of floats		
+		log_z:   array of floats
+		Teff:    array of ints
+		Zi:   array of floats
+		
+		Returns:
+		-------
+		array of floats:
+				First parametr		
+		array of floats:
+				Second parametr
+		array of ints:
+				Third parametr
+		"""
 
 	COLIND = []
 	ZVAL = []
@@ -91,15 +160,42 @@ def cut_cold(Col_ind, log_z, Teff, Zi):
 
 
 def interp_1D(new_grid, old_grid, old_func, val):
-	""" Функция производит одномерную интерполяцию, и возвращает значение функции, 
-	соответствующее заданному пользователем параметру """
-	
+	""" Функция производит одномерную интерполяцию, и возвращает значение параметра Teff, 
+		соответствующее заданному пользователем параметру log(g).
+
+		Parametrs:
+		---------
+		new_grid:	array of floats		
+		old_grid:   array of floats
+		old_func:   array of floats
+		val:   		float
+		
+		Returns:
+		-------
+		float: Temperature in K
+		"""
 	res = np.interp(new_grid, old_grid, old_func)
 	mas = np.argmin(np.abs(new_grid-val))
 
 	return np.round(res[mas],3)
 
-def interp_2D(x, y, z, Col_i, log_z_val):
+def interp_2D(x, y, z, Col_i, z_val):
+	""" Функция производит двумерную интерполяцию, и возвращает значение параметра Teff, 
+		соответствующее заданным пользователем параметрам: [Fe/H] и показателю цвета.
+
+		Parametrs:
+		---------
+		x:		array of floats		
+		y:  	array of floats
+		z:  	array of floats
+		Col_i:	float
+		z_val:	float
+		
+		Returns:
+		-------
+		float: Temperature in K
+		"""
+
 		x_grid = np.around(np.arange(round(np.min(x), 3), round(np.max(x), 3)+0.001, 0.001), 3)
 		y_grid = np.around(np.arange(np.min(y), np.max(y)+0.01, 0.01), 2)
 
@@ -107,16 +203,18 @@ def interp_2D(x, y, z, Col_i, log_z_val):
 		Z = griddata((x, y), z, (X, Y), method='linear')
 
 		mas_x = np.argmin(np.abs(x_grid - Col_i))
-		mas_y = np.argmin(np.abs(y_grid - log_z_val))
+		mas_y = np.argmin(np.abs(y_grid - z_val))
 
 		return np.round(np.float(Z[mas_x, mas_y]), 3)
 
 
 def main(Col_ind_val, Col_i, log_z_val, log_g_val):
 	""" Функция main() открывает fits-файл с массивами содержащими значения 
-	Teff, Log(g), [Fe/H] и различных показателей цвета. Далее проводится двумерная интерполяция этих данных.
-	В результате работы программы пользователь получает на выходе значение эффективной температуры звезды, 
-	соответствующее введенным им значениям Log(g), [Fe/H] и показателя цвета """
+		Teff, Log(g), [Fe/H] и различных показателей цвета. Далее проводится 
+		двумерная интерполяция этих данных.
+		В результате работы программы пользователь получает на выходе значение 
+		эффективной температуры звезды, соответствующее введенным им значениям 
+		Log(g), [Fe/H] и показателя цвета """
 
 	a = fits.open('Phoenix.fits')
 
@@ -128,6 +226,12 @@ def main(Col_ind_val, Col_i, log_z_val, log_g_val):
 	H_K = a[1].data.field(5)
 	J_KS = a[1].data.field(6)
 	B_V = a[1].data.field(7)
+
+	print(np.min(J_K), np.max(J_K))
+	print(np.min(J_H), np.max(J_H))
+	print(np.min(H_K), np.max(H_K))
+	print(np.min(J_KS), np.max(J_KS))
+	print(np.min(B_V), np.max(B_V))
 
 	logg = np.arange(0, 6.5, 0.5)
 	g_grid = np.arange(0, 6.5, 0.01)
@@ -144,7 +248,7 @@ def main(Col_ind_val, Col_i, log_z_val, log_g_val):
 	elif Col_ind_val == 'B-V':
 		Col_ind = B_V
 	else:
-		print('Error! Choose another color index')
+		print(r'Ошибка! Введите другой покатель цвета')
 
 	Col_ind_s, log_z_s, Teff_s, log_g_s = sort(Col_ind, log_z, Teff, log_g)
 
@@ -175,15 +279,15 @@ if __name__=='__main__':
 	parser = argparse.ArgumentParser(prog='Phoenix_interpol.py')
 
 	parser.add_argument("-I", "--color_name", type=str,
-	                    help="String whith the name of your color index:'J-K', 'J-H', 'H-K', 'J-KS', B-V'")
+	                    help=r"Выбор показателя цвета: J-K, J-H, H-K, J-KS, B-V")
 	parser.add_argument("-C", "--color_value", type=float,
-	                    help="The value of your color index")
+	                    help=r"Показатель цвета, возможные значения лежат в следущих диапазонах J-K: -0.975 -- 1.381, J-H: -0.255 -- 1.033, H-K: -0.804 -- 0.542, J-KS: -0.997 -- 1.350, B-V: 0.0382 -- 3.001")
 	parser.add_argument("-Z", "--metall", type=float,
-	                    help="Metallisity of your star, changes in range -4 to 1")
+	                    help=r"Металличность звезды, изменяется в диапазоне от -4 до 1")
 	parser.add_argument("-G", "--log_g", type=float,
-	                    help="Log(g) of your star, changes in range 0 to 6")
+	                    help=r"Log(g) звезды, изменяется в диапазоне от 0 до 6")
 
 	args = parser.parse_args()
 
 	teff1, teff2 = main(Col_ind_val=args.color_name, Col_i=args.color_value, log_z_val=args.metall, log_g_val=args.log_g)
-	print('For hot star:', teff1, 'K', '\nFor cold star', teff2, 'K')
+	print(r'Температура звезды, высокая:', teff1, 'K', r'\nТемпература звезды, низкая', teff2, 'K')
