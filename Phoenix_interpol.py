@@ -14,10 +14,10 @@ def sort(Col_ind, log_z, Teff, log_g):
 
 		Parametrs:
 		---------
-		Col_ind: array of floats		
-		log_z:   array of floats
-		Teff:    array of ints
-		log_g:   array of floats
+		Col_ind:array of floats		
+		log_z:	array of floats
+		Teff:	array of ints
+		log_g:	array of floats
 		
 		Returns:
 		-------
@@ -47,11 +47,11 @@ def mask(Col_ind, log_z, Teff, log_g, i):
 
 		Parametrs:
 		---------
-		Col_ind: array of floats		
-		log_z:   array of floats
-		Teff:    array of ints
-		log_g:   array of floats
-		i:       float
+		Col_ind:array of floats		
+		log_z:	array of floats
+		Teff:	array of ints
+		log_g:	array of floats
+		i:	float
 
 		Returns:
 		-------
@@ -79,10 +79,10 @@ def cut_hot(Col_ind, log_z, Teff, Zi):
 
 		Parametrs:
 		---------
-		Col_ind: array of floats		
-		log_z:   array of floats
-		Teff:    array of ints
-		Zi:   array of floats
+		Col_ind:array of floats
+		log_z:	array of floats
+		Teff:	array of ints
+		Zi:	array of floats
 		
 		Returns:
 		-------
@@ -123,10 +123,10 @@ def cut_cold(Col_ind, log_z, Teff, Zi):
 
 		Parametrs:
 		---------
-		Col_ind: array of floats		
-		log_z:   array of floats
-		Teff:    array of ints
-		Zi:   array of floats
+		Col_ind:array of floats	
+		log_z:	array of floats
+		Teff:	array of ints
+		Zi:	array of floats
 		
 		Returns:
 		-------
@@ -166,13 +166,13 @@ def interp_1D(new_grid, old_grid, old_func, val):
 		Parametrs:
 		---------
 		new_grid:	array of floats		
-		old_grid:   array of floats
-		old_func:   array of floats
-		val:   		float
+		old_grid:	array of floats
+		old_func:	array of floats
+		val:		float
 		
 		Returns:
 		-------
-		float: Temperature in K
+		float or nun:	Temperature in K
 		"""
 	res = np.interp(new_grid, old_grid, old_func)
 	mas = np.argmin(np.abs(new_grid-val))
@@ -185,15 +185,15 @@ def interp_2D(x, y, z, Col_i, z_val):
 
 		Parametrs:
 		---------
-		x:		array of floats		
-		y:  	array of floats
-		z:  	array of floats
+		x:	array of floats		
+		y:	array of floats
+		z:	array of floats
 		Col_i:	float
 		z_val:	float
 		
 		Returns:
 		-------
-		float: Temperature in K
+		float or nun:	Temperature in K
 		"""
 
 	x_grid = np.around(np.arange(round(np.min(x), 3), round(np.max(x), 3)+0.001, 0.001), 3)
@@ -202,9 +202,12 @@ def interp_2D(x, y, z, Col_i, z_val):
 	X, Y = np.meshgrid(x_grid, y_grid, indexing='xy')
 	Z = griddata((x, y), z, (X, Y), method='linear')
 
-	mas_x = np.argmin(np.abs(x_grid - Col_i))
-	mas_y = np.argmin(np.abs(y_grid - z_val))
+	print(np.shape(Z), len(y_grid), len(x_grid))
 
+	mas_x = np.argmin(np.abs(y_grid - z_val))
+	mas_y = np.argmin(np.abs(x_grid - Col_i))
+	
+	print(mas_x, mas_y)
 	return np.round(np.float(Z[mas_x, mas_y]), 3)
 
 
@@ -214,7 +217,20 @@ def main(Col_ind_val, Col_i, log_z_val, log_g_val):
 		двумерная интерполяция этих данных.
 		В результате работы программы пользователь получает на выходе значение 
 		эффективной температуры звезды, соответствующее введенным им значениям 
-		Log(g), [Fe/H] и показателя цвета """
+		Log(g), [Fe/H] и показателя цвета 
+
+		Parametrs:
+		---------
+		Col_ind_val:	string		
+		Col_i:		float
+		log_z_val:	float
+		log_g_val:	float
+		
+		Returns:
+		-------
+		float or nun:	Temperature in K
+		float or nun:	Temperature in K
+		"""
 
 	a = fits.open('Phoenix.fits')
 
@@ -227,6 +243,7 @@ def main(Col_ind_val, Col_i, log_z_val, log_g_val):
 	J_KS = a[1].data.field(6)
 	B_V = a[1].data.field(7)
 
+	print(type(Teff))
 	print(np.min(J_K), np.max(J_K))
 	print(np.min(J_H), np.max(J_H))
 	print(np.min(H_K), np.max(H_K))
