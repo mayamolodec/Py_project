@@ -12,15 +12,15 @@ from Phoenix_interpol import sort, cut_cold
 
 class Test(unittest.TestCase):
 	def test_sort(self):
-		a = [3,5,0,1,2,4,6,7,8,9]
-		c = [0,1,2,3,4,5,6,7,8,9]
-		b = [1,2,3,4,5,6,7,8,9,0]
-		d = [3,5,0,1,2,4,6,7,8,9]
+		a = np.array([3,5,0,1,2,4,6,7,8,9])
+		c = np.array([0,1,2,3,4,5,6,7,8,9])
+		b = np.array([1,2,3,4,5,6,7,8,9,0])
+		d = np.array([3,5,0,1,2,4,6,7,8,9]
 
-		a1 = [9,3,5,0,1,2,4,6,7,8]
-		c1 = [9,0,1,2,3,4,5,6,7,8]
-		b1 = [0,1,2,3,4,5,6,7,8,9]
-		d1 = [9,3,5,0,1,2,4,6,7,8]
+		a1 = np.array([9,3,5,0,1,2,4,6,7,8])
+		c1 = np.array([9,0,1,2,3,4,5,6,7,8])
+		b1 = np.array([0,1,2,3,4,5,6,7,8,9])
+		d1 = np.array([9,3,5,0,1,2,4,6,7,8])
     	
 		a2,c2,b2,d2 = sort(a,c,b,d)
 
@@ -36,9 +36,9 @@ class Test(unittest.TestCase):
 		x = np.array([1,2,3,2,5,6,5,4])
 		y = np.array([7,8,9,10,11,12,13,14])
 
-		x1 = [1,2,5]
-		num1 = [1,1,2]
-		y1 = [7,8,11]
+		x1 = np.array([1,2,5])
+		num1 = np.array([1,1,2])
+		y1 = np.array([7,8,11])
 
 		x2,num2,y2 = cut_cold(x,num,y,num_comp)
 
