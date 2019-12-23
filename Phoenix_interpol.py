@@ -35,12 +35,6 @@ def sort(Col_ind, log_z, Teff, log_g):
 	log_z_fin = log_z[mask]
 	Teff_fin = Teff[mask]
 	log_g_fin = log_g[mask]
-	# x = zip(Col_ind, log_z, Teff, log_g)
-	# xs = sorted(x, key=lambda tup: tup[2])
-	# Col_ind_fin = [x[0] for x in xs]
-	# log_z_fin = [x[1] for x in xs]
-	# Teff_fin = [x[2] for x in xs]
-	# log_g_fin = [x[3] for x in xs]
 
 	return np.array(Col_ind_fin), np.array(log_z_fin), np.array(Teff_fin), np.array(log_g_fin)
 
