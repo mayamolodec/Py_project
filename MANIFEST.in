@@ -1,5 +1,5 @@
-include runner README.md
-include Phoenix.fits
+include README.md
+include Phoenix_interpol/Phoenix.fits
 
 
  
