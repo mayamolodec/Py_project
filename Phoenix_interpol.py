@@ -285,13 +285,13 @@ def main(Col_ind_val, Col_i, log_z_val, log_g_val):
 def with_args():
 	parser = argparse.ArgumentParser(prog='Phoenix_interpol.py')
 
-	parser.add_argument("-I", "--color_name", type=str,
+	parser.add_argument("-I", "--color_name", type=str, required=True,
 	                    help="Выбор показателя цвета: J-K, J-H, H-K, J-KS, B-V")
-	parser.add_argument("-C", "--color_value", type=float,
+	parser.add_argument("-C", "--color_value", type=float, required=True,
 	                    help="Показатель цвета, возможные значения лежат в следущих диапазонах J-K: -0.975 -- 1.381, J-H: -0.255 -- 1.033, H-K: -0.804 -- 0.542, J-KS: -0.997 -- 1.350, B-V: 0.0382 -- 3.001")
-	parser.add_argument("-Z", "--metall", type=float,
+	parser.add_argument("-Z", "--metall", type=float, required=True,
 	                    help="Металличность звезды, изменяется в диапазоне от -4 до 1")
-	parser.add_argument("-G", "--log_g", type=float,
+	parser.add_argument("-G", "--log_g", type=float, required=True,
 	                    help="Log(g) звезды, изменяется в диапазоне от 0 до 6")
 
 	args = parser.parse_args()
