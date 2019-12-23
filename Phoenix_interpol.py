@@ -6,7 +6,7 @@ from astropy.io import fits
 from scipy import interpolate
 from scipy.interpolate import griddata
 import argparse
-
+import os
 
 def sort(Col_ind, log_z, Teff, log_g):
 	""" Функция сортирует массивы содержащие значения 
@@ -30,13 +30,17 @@ def sort(Col_ind, log_z, Teff, log_g):
 		array of floats:
 				Fourth parametr
 		"""
-
-	x = zip(Col_ind, log_z, Teff, log_g)
-	xs = sorted(x, key=lambda tup: tup[2])
-	Col_ind_fin = [x[0] for x in xs]
-	log_z_fin = [x[1] for x in xs]
-	Teff_fin = [x[2] for x in xs]
-	log_g_fin = [x[3] for x in xs]
+	mask = Teff.argsort()
+	Col_ind_fin = Col_ind[mask]
+	log_z_fin = log_z[mask]
+	Teff_fin = Teff[mask]
+	log_g_fin = log_g[mask]
+	# x = zip(Col_ind, log_z, Teff, log_g)
+	# xs = sorted(x, key=lambda tup: tup[2])
+	# Col_ind_fin = [x[0] for x in xs]
+	# log_z_fin = [x[1] for x in xs]
+	# Teff_fin = [x[2] for x in xs]
+	# log_g_fin = [x[3] for x in xs]
 
 	return np.array(Col_ind_fin), np.array(log_z_fin), np.array(Teff_fin), np.array(log_g_fin)
 
@@ -228,17 +232,19 @@ def main(Col_ind_val, Col_i, log_z_val, log_g_val):
 		float or nun:	Temperature in K
 		float or nun:	Temperature in K
 		"""
+		
+	path=os.path.dirname(os.path.abspath(__file__) )
 
-	a = fits.open('Phoenix.fits')
+	a = fits.open(os.path.join(path,'Phoenix.fits'))
 
-	Teff = a[1].data.field(0)
-	log_g = a[1].data.field(1)
-	log_z = a[1].data.field(2)
-	J_K = a[1].data.field(3)
-	J_H = a[1].data.field(4)
-	H_K = a[1].data.field(5)
-	J_KS = a[1].data.field(6)
-	B_V = a[1].data.field(7)
+	Teff = np.array(a[1].data.field(0))
+	log_g = np.array(a[1].data.field(1))
+	log_z = np.array(a[1].data.field(2))
+	J_K = np.array(a[1].data.field(3))
+	J_H = np.array(a[1].data.field(4))
+	H_K = np.array(a[1].data.field(5))
+	J_KS = np.array(a[1].data.field(6))
+	B_V = np.array(a[1].data.field(7))
 
 	logg = np.arange(0, 6.5, 0.5)
 	g_grid = np.arange(0, 6.5, 0.01)
