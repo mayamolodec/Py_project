@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from numpy.testing import assert_array_equal
 import doctest
 import unittest
+from numpy import argsort
 import numpy as np
 
 from Phoenix_interpol import sort, cut_cold
